@@ -3,10 +3,12 @@ package tech.devinhouse.livraria.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tech.devinhouse.livraria.exception.RegistroExistenteException;
+import tech.devinhouse.livraria.exception.RegistroNaoEncontradoException;
 import tech.devinhouse.livraria.model.Livro;
 import tech.devinhouse.livraria.repository.LivroRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +23,18 @@ public class LivroService {
             throw new RegistroExistenteException("Livro", livro.getIsbn());
         livro.setDataInclusao(LocalDateTime.now());
         livro = repo.save(livro);
+        return livro;
+    }
+
+    public List<Livro> consultar() {
+        return repo.findAll();
+    }
+
+    public Livro consultar(Integer id) {
+        Optional<Livro> livroOpt = repo.findById(id);
+        if (livroOpt.isEmpty())
+            throw new RegistroNaoEncontradoException("Livro", id);
+        Livro livro = livroOpt.get();
         return livro;
     }
 }
