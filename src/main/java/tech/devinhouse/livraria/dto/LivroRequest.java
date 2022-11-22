@@ -13,6 +13,9 @@ public class LivroRequest {
     @Size(min=10, max=20, message = "{campo.invalido}")
     private String isbn;
 
+    @NotEmpty(message = "{campo.obrigatorio}")
+    private String titulo;
+
     @NotNull(message = "{campo.obrigatorio}")
     private Integer nroDePaginas;
 

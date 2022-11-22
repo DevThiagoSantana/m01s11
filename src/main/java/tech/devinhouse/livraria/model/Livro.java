@@ -17,6 +17,8 @@ public class Livro {
 
     private String isbn;
 
+    private String titulo;
+
     private String idioma;
 
     private Integer nroDePaginas;

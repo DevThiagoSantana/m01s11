@@ -11,6 +11,8 @@ public class LivroResponse {
 
     private String isbn;
 
+    private String titulo;
+
     private String idioma;
 
     private Integer nroDePaginas;
