@@ -48,4 +48,19 @@ public class LivroController {
         return ResponseEntity.ok(resp);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<LivroResponse> atualizar(@PathVariable("id") Integer id, @RequestBody @Valid LivroRequest request) {
+        Livro livro = mapper.map(request, Livro.class);
+        livro.setId(id);
+        livro = service.atualizar(livro);
+        LivroResponse resp = mapper.map(livro, LivroResponse.class);
+        return ResponseEntity.ok(resp);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity excluir(@PathVariable("id") Integer id) {
+        service.excluir(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

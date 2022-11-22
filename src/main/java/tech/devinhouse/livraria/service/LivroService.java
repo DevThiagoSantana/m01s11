@@ -37,4 +37,23 @@ public class LivroService {
         Livro livro = livroOpt.get();
         return livro;
     }
+
+    public Livro atualizar(Livro livroAtualizado) {
+        Optional<Livro> livroOpt = repo.findById(livroAtualizado.getId());
+        if (livroOpt.isEmpty())
+            throw new RegistroNaoEncontradoException("Livro", livroAtualizado.getId());
+        Livro livroBD = livroOpt.get();
+        livroBD.setTitulo( livroAtualizado.getTitulo() );
+        livroBD.setIdioma( livroAtualizado.getIdioma() );
+        livroBD.setNroDePaginas( livroAtualizado.getNroDePaginas() );
+        livroAtualizado = repo.save(livroBD);
+        return livroAtualizado;
+    }
+
+    public void excluir(Integer id) {
+        boolean existe = repo.existsById(id);
+        if (!existe)
+            throw new RegistroNaoEncontradoException("Livro", id);
+        repo.deleteById(id);
+    }
 }
