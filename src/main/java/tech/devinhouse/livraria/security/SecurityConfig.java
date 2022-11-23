@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import tech.devinhouse.livraria.service.TokenService;
 import tech.devinhouse.livraria.service.UsuarioService;
 
 @EnableWebSecurity
@@ -21,6 +23,7 @@ import tech.devinhouse.livraria.service.UsuarioService;
 public class SecurityConfig {
 
     private UsuarioService usuarioService;
+    private TokenService tokenService;
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http, BCryptPasswordEncoder passwordEncoder, UserDetailsService userDetailService) throws Exception {
@@ -32,13 +35,20 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        AutorizacaoFilter autorizacaoFilter = new AutorizacaoFilter(tokenService);
         return http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/autenticacao/**").permitAll()
-//                .antMatchers(HttpMethod.POST, "/api/livros/**").hasAnyAuthority("ROLE_ADMIN")
-                .and().build();
+                .antMatchers(HttpMethod.GET, "/api/livros/**").hasAnyAuthority("ROLE_LEITOR", "ROLE_FUNCIONARIO", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/livros/**").hasAnyAuthority("ROLE_FUNCIONARIO", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.PUT, "/api/livros/**").hasAnyAuthority("ROLE_FUNCIONARIO", "ROLE_ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/livros/**").hasAnyAuthority("ROLE_ADMIN")
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(autorizacaoFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
         }
 
     }

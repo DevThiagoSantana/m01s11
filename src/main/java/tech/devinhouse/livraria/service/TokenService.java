@@ -1,7 +1,9 @@
 package tech.devinhouse.livraria.service;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tech.devinhouse.livraria.model.Role;
@@ -32,4 +34,20 @@ public class TokenService {
         return token;
     }
 
+    public String extrairToken(String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
+            throw new IllegalArgumentException("Invalid Headers");
+        // Bearer TOKEN_JWT&*%Bbjbjbcbvmxzvb,xzv
+//        String token = authorizationHeader.substring("Bearer ".length());
+        String[] split = authorizationHeader.split(" ");
+        String token = split[1];
+        return token;
+    }
+
+    public DecodedJWT decodificarToken(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(segredo.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+        return decodedJWT;
+    }
 }
