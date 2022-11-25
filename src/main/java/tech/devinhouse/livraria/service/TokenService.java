@@ -47,7 +47,7 @@ public class TokenService {
     public DecodedJWT decodificarToken(String token) {
         Algorithm algorithm = Algorithm.HMAC256(segredo.getBytes());
         JWTVerifier verifier = JWT.require(algorithm).build();
-        DecodedJWT decodedJWT = verifier.verify(token);
+        DecodedJWT decodedJWT = verifier.verify(token);  // token decodificado
         return decodedJWT;
     }
 }

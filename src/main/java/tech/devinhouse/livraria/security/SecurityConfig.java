@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +21,7 @@ import tech.devinhouse.livraria.service.UsuarioService;
 
 @EnableWebSecurity
 @Configuration
+@EnableGlobalMethodSecurity(jsr250Enabled = true) // @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 @AllArgsConstructor
 public class SecurityConfig {
 
@@ -40,6 +43,8 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+
+//                .antMatchers("/v3/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
                 .antMatchers("/api/autenticacao/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/livros/**").hasAnyAuthority("ROLE_LEITOR", "ROLE_FUNCIONARIO", "ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/livros/**").hasAnyAuthority("ROLE_FUNCIONARIO", "ROLE_ADMIN")
@@ -49,6 +54,13 @@ public class SecurityConfig {
                 .and()
                 .addFilterBefore(autorizacaoFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-        }
-
     }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.debug(false)
+                .ignoring()
+                .antMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/favicon.ico");
+    }
+
+}

@@ -10,11 +10,8 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import tech.devinhouse.livraria.dto.LivroResponse;
-import tech.devinhouse.livraria.model.Livro;
 import tech.devinhouse.livraria.model.Role;
 import tech.devinhouse.livraria.model.Usuario;
-import tech.devinhouse.livraria.service.LivroService;
 import tech.devinhouse.livraria.service.UsuarioService;
 
 import java.time.LocalDate;
