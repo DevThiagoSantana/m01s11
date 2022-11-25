@@ -43,8 +43,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-
-//                .antMatchers("/v3/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
+                .antMatchers("/v3/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
                 .antMatchers("/api/autenticacao/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/livros/**").hasAnyAuthority("ROLE_LEITOR", "ROLE_FUNCIONARIO", "ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/livros/**").hasAnyAuthority("ROLE_FUNCIONARIO", "ROLE_ADMIN")
